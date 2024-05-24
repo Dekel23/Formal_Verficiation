@@ -23,7 +23,7 @@ In this project our goal is to try solving the Sokoban game using formal verific
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/BoazGur/SokobanVerficiation
+git clone https://github.com/Dekel23/Sokoban_Verficiation
 cd SokobanVerficiation
 ```
 
