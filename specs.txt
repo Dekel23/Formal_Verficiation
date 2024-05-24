@@ -1,0 +1,1 @@
+LTLSPEC !F(done)

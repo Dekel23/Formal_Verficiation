@@ -1,0 +1,414 @@
+MODULE main
+
+DEFINE
+	n := 3; m := 5;
+	done := ((box_x = 0) & (box_y = 0) & (v_00 = star)) | ((box_x = 1) & (box_y = 0) & (v_01 = star)) | ((box_x = 2) & (box_y = 0) & (v_02 = star)) | ((box_x = 3) & (box_y = 0) & (v_03 = star)) | ((box_x = 4) & (box_y = 0) & (v_04 = star)) | ((box_x = 0) & (box_y = 1) & (v_10 = star)) | ((box_x = 1) & (box_y = 1) & (v_11 = star)) | ((box_x = 2) & (box_y = 1) & (v_12 = star)) | ((box_x = 3) & (box_y = 1) & (v_13 = star)) | ((box_x = 4) & (box_y = 1) & (v_14 = star)) | ((box_x = 0) & (box_y = 2) & (v_20 = star)) | ((box_x = 1) & (box_y = 2) & (v_21 = star)) | ((box_x = 2) & (box_y = 2) & (v_22 = star)) | ((box_x = 3) & (box_y = 2) & (v_23 = star)) | ((box_x = 4) & (box_y = 2) & (v_24 = star));
+
+VAR
+	turn: {u, d, r, l, none};
+	possible_up: boolean;
+	possible_down: boolean;
+	possible_right: boolean;
+	possible_left: boolean;
+	y: 0..2;
+	x: 0..4;
+	v_00: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_01: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_02: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_03: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_04: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_10: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_11: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_12: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_13: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_14: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_20: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_21: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_22: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_23: {shtrudel, plus, dollar, star, solamit, dot, minus};
+	v_24: {shtrudel, plus, dollar, star, solamit, dot, minus};
+
+	box_y: 0..2;
+	box_x: 0..4;
+ASSIGN
+	init(v_00) := solamit;
+	init(v_01) := solamit;
+	init(v_02) := solamit;
+	init(v_03) := solamit;
+	init(v_04) := solamit;
+	init(v_10) := solamit;
+	init(v_11) := dollar;
+	init(v_12) := shtrudel;
+	init(v_13) := dot;
+	init(v_14) := solamit;
+	init(v_20) := solamit;
+	init(v_21) := solamit;
+	init(v_22) := solamit;
+	init(v_23) := solamit;
+	init(v_24) := solamit;
+
+	init(possible_up) := !(v_02 = solamit);
+	init(possible_down) := !(v_22 = solamit);
+	init(possible_right) := !((v_13 = solamit) | (((v_13 = dollar) | (v_13 = dollar)) & ((v_14 = dollar) | (v_14 = dollar) | (v_14 = solamit))));
+	init(possible_left) := !((v_11 = solamit) | (((v_11 = dollar) | (v_11 = dollar)) & ((v_10 = dollar) | (v_10 = dollar) | (v_10 = solamit))));
+	init(turn) := none;
+	init(x) := 2;
+	init(y) := 1;
+
+	init(box_y) := 1;
+	init(box_x) := 1;
+	next(possible_up) := case
+		(y = 0) & (x = 0) : FALSE;
+		(y = 0) & (x = 1) : FALSE;
+		(y = 0) & (x = 2) : FALSE;
+		(y = 0) & (x = 3) : FALSE;
+		(y = 0) & (x = 4) : FALSE;
+		(y = 1) & (x = 0) : !((v_00 = solamit));
+		(y = 1) & (x = 1) : !((v_01 = solamit));
+		(y = 1) & (x = 2) : !((v_02 = solamit));
+		(y = 1) & (x = 3) : !((v_03 = solamit));
+		(y = 1) & (x = 4) : !((v_04 = solamit));
+		(y = 2) & (x = 0) : !((v_10 = solamit) | (((v_10 = dollar) | (v_10 = star)) & ((v_00 = dollar) | (v_00 = star) | (v_00 = solamit))));
+		(y = 2) & (x = 1) : !((v_11 = solamit) | (((v_11 = dollar) | (v_11 = star)) & ((v_01 = dollar) | (v_01 = star) | (v_01 = solamit))));
+		(y = 2) & (x = 2) : !((v_12 = solamit) | (((v_12 = dollar) | (v_12 = star)) & ((v_02 = dollar) | (v_02 = star) | (v_02 = solamit))));
+		(y = 2) & (x = 3) : !((v_13 = solamit) | (((v_13 = dollar) | (v_13 = star)) & ((v_03 = dollar) | (v_03 = star) | (v_03 = solamit))));
+		(y = 2) & (x = 4) : !((v_14 = solamit) | (((v_14 = dollar) | (v_14 = star)) & ((v_04 = dollar) | (v_04 = star) | (v_04 = solamit))));
+		TRUE : FALSE;
+	esac;
+
+	next(possible_down) := case
+		(y = 0) & (x = 0) : !((v_10 = solamit) | (((v_10 = dollar) | (v_10 = star)) & ((v_20 = dollar) | (v_20 = star) | (v_20 = solamit))));
+		(y = 0) & (x = 1) : !((v_11 = solamit) | (((v_11 = dollar) | (v_11 = star)) & ((v_21 = dollar) | (v_21 = star) | (v_21 = solamit))));
+		(y = 0) & (x = 2) : !((v_12 = solamit) | (((v_12 = dollar) | (v_12 = star)) & ((v_22 = dollar) | (v_22 = star) | (v_22 = solamit))));
+		(y = 0) & (x = 3) : !((v_13 = solamit) | (((v_13 = dollar) | (v_13 = star)) & ((v_23 = dollar) | (v_23 = star) | (v_23 = solamit))));
+		(y = 0) & (x = 4) : !((v_14 = solamit) | (((v_14 = dollar) | (v_14 = star)) & ((v_24 = dollar) | (v_24 = star) | (v_24 = solamit))));
+		(y = 1) & (x = 0) : !((v_20 = solamit));
+		(y = 1) & (x = 1) : !((v_21 = solamit));
+		(y = 1) & (x = 2) : !((v_22 = solamit));
+		(y = 1) & (x = 3) : !((v_23 = solamit));
+		(y = 1) & (x = 4) : !((v_24 = solamit));
+		(y = 2) & (x = 0) : FALSE;
+		(y = 2) & (x = 1) : FALSE;
+		(y = 2) & (x = 2) : FALSE;
+		(y = 2) & (x = 3) : FALSE;
+		(y = 2) & (x = 4) : FALSE;
+		TRUE : FALSE;
+	esac;
+
+	next(possible_right) := case
+		(y = 0) & (x = 0) : !((v_01 = solamit) | (((v_01 = dollar) | (v_01 = star)) & ((v_02 = dollar) | (v_02 = star) | (v_02 = solamit))));
+		(y = 0) & (x = 1) : !((v_02 = solamit) | (((v_02 = dollar) | (v_02 = star)) & ((v_03 = dollar) | (v_03 = star) | (v_03 = solamit))));
+		(y = 0) & (x = 2) : !((v_03 = solamit) | (((v_03 = dollar) | (v_03 = star)) & ((v_04 = dollar) | (v_04 = star) | (v_04 = solamit))));
+		(y = 0) & (x = 3) : !((v_04 = solamit));
+		(y = 0) & (x = 4) : FALSE;
+		(y = 1) & (x = 0) : !((v_11 = solamit) | (((v_11 = dollar) | (v_11 = star)) & ((v_12 = dollar) | (v_12 = star) | (v_12 = solamit))));
+		(y = 1) & (x = 1) : !((v_12 = solamit) | (((v_12 = dollar) | (v_12 = star)) & ((v_13 = dollar) | (v_13 = star) | (v_13 = solamit))));
+		(y = 1) & (x = 2) : !((v_13 = solamit) | (((v_13 = dollar) | (v_13 = star)) & ((v_14 = dollar) | (v_14 = star) | (v_14 = solamit))));
+		(y = 1) & (x = 3) : !((v_14 = solamit));
+		(y = 1) & (x = 4) : FALSE;
+		(y = 2) & (x = 0) : !((v_21 = solamit) | (((v_21 = dollar) | (v_21 = star)) & ((v_22 = dollar) | (v_22 = star) | (v_22 = solamit))));
+		(y = 2) & (x = 1) : !((v_22 = solamit) | (((v_22 = dollar) | (v_22 = star)) & ((v_23 = dollar) | (v_23 = star) | (v_23 = solamit))));
+		(y = 2) & (x = 2) : !((v_23 = solamit) | (((v_23 = dollar) | (v_23 = star)) & ((v_24 = dollar) | (v_24 = star) | (v_24 = solamit))));
+		(y = 2) & (x = 3) : !((v_24 = solamit));
+		(y = 2) & (x = 4) : FALSE;
+		TRUE : FALSE;
+	esac;
+
+	next(possible_left) := case
+		(y = 0) & (x = 0) : FALSE;
+		(y = 0) & (x = 1) : !((v_00 = solamit));
+		(y = 0) & (x = 2) : !((v_01 = solamit) | (((v_01 = dollar) | (v_01 = star)) & ((v_00 = dollar) | (v_00 = star) | (v_00 = solamit))));
+		(y = 0) & (x = 3) : !((v_02 = solamit) | (((v_02 = dollar) | (v_02 = star)) & ((v_01 = dollar) | (v_01 = star) | (v_01 = solamit))));
+		(y = 0) & (x = 4) : !((v_03 = solamit) | (((v_03 = dollar) | (v_03 = star)) & ((v_02 = dollar) | (v_02 = star) | (v_02 = solamit))));
+		(y = 1) & (x = 0) : FALSE;
+		(y = 1) & (x = 1) : !((v_10 = solamit));
+		(y = 1) & (x = 2) : !((v_11 = solamit) | (((v_11 = dollar) | (v_11 = star)) & ((v_10 = dollar) | (v_10 = star) | (v_10 = solamit))));
+		(y = 1) & (x = 3) : !((v_12 = solamit) | (((v_12 = dollar) | (v_12 = star)) & ((v_11 = dollar) | (v_11 = star) | (v_11 = solamit))));
+		(y = 1) & (x = 4) : !((v_13 = solamit) | (((v_13 = dollar) | (v_13 = star)) & ((v_12 = dollar) | (v_12 = star) | (v_12 = solamit))));
+		(y = 2) & (x = 0) : FALSE;
+		(y = 2) & (x = 1) : !((v_20 = solamit));
+		(y = 2) & (x = 2) : !((v_21 = solamit) | (((v_21 = dollar) | (v_21 = star)) & ((v_20 = dollar) | (v_20 = star) | (v_20 = solamit))));
+		(y = 2) & (x = 3) : !((v_22 = solamit) | (((v_22 = dollar) | (v_22 = star)) & ((v_21 = dollar) | (v_21 = star) | (v_21 = solamit))));
+		(y = 2) & (x = 4) : !((v_23 = solamit) | (((v_23 = dollar) | (v_23 = star)) & ((v_22 = dollar) | (v_22 = star) | (v_22 = solamit))));
+		TRUE : FALSE;
+	esac;
+
+	next(turn) := case
+		done : none;
+		next(possible_up) & next(possible_down) & next(possible_right) & next(possible_left) : {u, d, r, l, none};
+		next(possible_up) & next(possible_down) & next(possible_right) : {u, d, r, none};
+		next(possible_up) & next(possible_down) & next(possible_left) : {u, d, l, none};
+		next(possible_up) & next(possible_right) & next(possible_left) : {u, r, l, none};
+		next(possible_down) & next(possible_right) & next(possible_left) : {d, r, l, none};
+		next(possible_up) & next(possible_down) : {u, d, none};
+		next(possible_up) & next(possible_right) : {u, r, none};
+		next(possible_up) & next(possible_left) : {u, l, none};
+		next(possible_down) & next(possible_right) : {d, r, none};
+		next(possible_down) & next(possible_left) : {d, l, none};
+		next(possible_right) & next(possible_left) : {r, l, none};
+		next(possible_up) : {u, none};
+		next(possible_down) : {d, none};
+		next(possible_right) : {r, none};
+		next(possible_left) : {l, none};
+		TRUE : none;
+	esac;
+
+	next(x) := case
+		(next(turn) = r) & (x < m - 1) : x + 1;
+		(next(turn) = l) & (x > 0) : x - 1;
+		TRUE : x;
+	esac;
+
+	next(y) := case
+		(next(turn) = d) & (y < n - 1) : y + 1;
+		(next(turn) = u) & (y > 0) : y - 1;
+		TRUE : y;
+	esac;
+
+	next(v_00) := case
+		(y = 0) & (x = 0) & (v_00 = shtrudel) & (next(turn) != none) : minus;
+		(y = 0) & (x = 0) & (v_00 = plus) & (next(turn) != none) : dot;
+		(y = 0) & (x = 1) & ((v_00 = minus) | (v_00 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 0) & (x = 1) & ((v_00 = dot) | (v_00 = star)) & (next(turn) = l) : plus;
+		(y = 0) & (x = 2) & ((v_01 = star) | (v_01 = dollar)) & (v_00 = minus) & (next(turn) = l) : dollar;
+		(y = 0) & (x = 2) & ((v_01 = star) | (v_01 = dollar)) & (v_00 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 0) & ((v_00 = minus) | (v_00 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 1) & (x = 0) & ((v_00 = dot) | (v_00 = star)) & (next(turn) = u) : plus;
+		(y = 2) & (x = 0) & ((v_10 = star) | (v_10 = dollar)) & (v_00 = minus) & (next(turn) = u) : dollar;
+		(y = 2) & (x = 0) & ((v_10 = star) | (v_10 = dollar)) & (v_00 = dot) & (next(turn) = u) : star;
+		TRUE : v_00;
+	esac;
+
+	next(v_01) := case
+		(y = 0) & (x = 1) & (v_01 = shtrudel) & (next(turn) != none) : minus;
+		(y = 0) & (x = 1) & (v_01 = plus) & (next(turn) != none) : dot;
+		(y = 0) & (x = 0) & ((v_01 = minus) | (v_01 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 0) & (x = 0) & ((v_01 = dot) | (v_01 = star)) & (next(turn) = r) : plus;
+		(y = 0) & (x = 2) & ((v_01 = minus) | (v_01 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 0) & (x = 2) & ((v_01 = dot) | (v_01 = star)) & (next(turn) = l) : plus;
+		(y = 0) & (x = 3) & ((v_02 = star) | (v_02 = dollar)) & (v_01 = minus) & (next(turn) = l) : dollar;
+		(y = 0) & (x = 3) & ((v_02 = star) | (v_02 = dollar)) & (v_01 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 1) & ((v_01 = minus) | (v_01 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 1) & (x = 1) & ((v_01 = dot) | (v_01 = star)) & (next(turn) = u) : plus;
+		(y = 2) & (x = 1) & ((v_11 = star) | (v_11 = dollar)) & (v_01 = minus) & (next(turn) = u) : dollar;
+		(y = 2) & (x = 1) & ((v_11 = star) | (v_11 = dollar)) & (v_01 = dot) & (next(turn) = u) : star;
+		TRUE : v_01;
+	esac;
+
+	next(v_02) := case
+		(y = 0) & (x = 2) & (v_02 = shtrudel) & (next(turn) != none) : minus;
+		(y = 0) & (x = 2) & (v_02 = plus) & (next(turn) != none) : dot;
+		(y = 0) & (x = 1) & ((v_02 = minus) | (v_02 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 0) & (x = 1) & ((v_02 = dot) | (v_02 = star)) & (next(turn) = r) : plus;
+		(y = 0) & (x = 0) & ((v_01 = star) | (v_01 = dollar)) & (v_02 = minus) & (next(turn) = r) : dollar;
+		(y = 0) & (x = 0) & ((v_01 = star) | (v_01 = dollar)) & (v_02 = dot) & (next(turn) = r) : star;
+		(y = 0) & (x = 3) & ((v_02 = minus) | (v_02 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 0) & (x = 3) & ((v_02 = dot) | (v_02 = star)) & (next(turn) = l) : plus;
+		(y = 0) & (x = 4) & ((v_03 = star) | (v_03 = dollar)) & (v_02 = minus) & (next(turn) = l) : dollar;
+		(y = 0) & (x = 4) & ((v_03 = star) | (v_03 = dollar)) & (v_02 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 2) & ((v_02 = minus) | (v_02 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 1) & (x = 2) & ((v_02 = dot) | (v_02 = star)) & (next(turn) = u) : plus;
+		(y = 2) & (x = 2) & ((v_12 = star) | (v_12 = dollar)) & (v_02 = minus) & (next(turn) = u) : dollar;
+		(y = 2) & (x = 2) & ((v_12 = star) | (v_12 = dollar)) & (v_02 = dot) & (next(turn) = u) : star;
+		TRUE : v_02;
+	esac;
+
+	next(v_03) := case
+		(y = 0) & (x = 3) & (v_03 = shtrudel) & (next(turn) != none) : minus;
+		(y = 0) & (x = 3) & (v_03 = plus) & (next(turn) != none) : dot;
+		(y = 0) & (x = 2) & ((v_03 = minus) | (v_03 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 0) & (x = 2) & ((v_03 = dot) | (v_03 = star)) & (next(turn) = r) : plus;
+		(y = 0) & (x = 1) & ((v_02 = star) | (v_02 = dollar)) & (v_03 = minus) & (next(turn) = r) : dollar;
+		(y = 0) & (x = 1) & ((v_02 = star) | (v_02 = dollar)) & (v_03 = dot) & (next(turn) = r) : star;
+		(y = 0) & (x = 4) & ((v_03 = minus) | (v_03 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 0) & (x = 4) & ((v_03 = dot) | (v_03 = star)) & (next(turn) = l) : plus;
+		(y = 1) & (x = 3) & ((v_03 = minus) | (v_03 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 1) & (x = 3) & ((v_03 = dot) | (v_03 = star)) & (next(turn) = u) : plus;
+		(y = 2) & (x = 3) & ((v_13 = star) | (v_13 = dollar)) & (v_03 = minus) & (next(turn) = u) : dollar;
+		(y = 2) & (x = 3) & ((v_13 = star) | (v_13 = dollar)) & (v_03 = dot) & (next(turn) = u) : star;
+		TRUE : v_03;
+	esac;
+
+	next(v_04) := case
+		(y = 0) & (x = 4) & (v_04 = shtrudel) & (next(turn) != none) : minus;
+		(y = 0) & (x = 4) & (v_04 = plus) & (next(turn) != none) : dot;
+		(y = 0) & (x = 3) & ((v_04 = minus) | (v_04 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 0) & (x = 3) & ((v_04 = dot) | (v_04 = star)) & (next(turn) = r) : plus;
+		(y = 0) & (x = 2) & ((v_03 = star) | (v_03 = dollar)) & (v_04 = minus) & (next(turn) = r) : dollar;
+		(y = 0) & (x = 2) & ((v_03 = star) | (v_03 = dollar)) & (v_04 = dot) & (next(turn) = r) : star;
+		(y = 1) & (x = 4) & ((v_04 = minus) | (v_04 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 1) & (x = 4) & ((v_04 = dot) | (v_04 = star)) & (next(turn) = u) : plus;
+		(y = 2) & (x = 4) & ((v_14 = star) | (v_14 = dollar)) & (v_04 = minus) & (next(turn) = u) : dollar;
+		(y = 2) & (x = 4) & ((v_14 = star) | (v_14 = dollar)) & (v_04 = dot) & (next(turn) = u) : star;
+		TRUE : v_04;
+	esac;
+
+	next(v_10) := case
+		(y = 1) & (x = 0) & (v_10 = shtrudel) & (next(turn) != none) : minus;
+		(y = 1) & (x = 0) & (v_10 = plus) & (next(turn) != none) : dot;
+		(y = 1) & (x = 1) & ((v_10 = minus) | (v_10 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 1) & (x = 1) & ((v_10 = dot) | (v_10 = star)) & (next(turn) = l) : plus;
+		(y = 1) & (x = 2) & ((v_11 = star) | (v_11 = dollar)) & (v_10 = minus) & (next(turn) = l) : dollar;
+		(y = 1) & (x = 2) & ((v_11 = star) | (v_11 = dollar)) & (v_10 = dot) & (next(turn) = l) : star;
+		(y = 0) & (x = 0) & ((v_10 = minus) | (v_10 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 0) & (x = 0) & ((v_10 = dot) | (v_10 = star)) & (next(turn) = d) : plus;
+		(y = 2) & (x = 0) & ((v_10 = minus) | (v_10 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 2) & (x = 0) & ((v_10 = dot) | (v_10 = star)) & (next(turn) = u) : plus;
+		TRUE : v_10;
+	esac;
+
+	next(v_11) := case
+		(y = 1) & (x = 1) & (v_11 = shtrudel) & (next(turn) != none) : minus;
+		(y = 1) & (x = 1) & (v_11 = plus) & (next(turn) != none) : dot;
+		(y = 1) & (x = 0) & ((v_11 = minus) | (v_11 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 1) & (x = 0) & ((v_11 = dot) | (v_11 = star)) & (next(turn) = r) : plus;
+		(y = 1) & (x = 2) & ((v_11 = minus) | (v_11 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 1) & (x = 2) & ((v_11 = dot) | (v_11 = star)) & (next(turn) = l) : plus;
+		(y = 1) & (x = 3) & ((v_12 = star) | (v_12 = dollar)) & (v_11 = minus) & (next(turn) = l) : dollar;
+		(y = 1) & (x = 3) & ((v_12 = star) | (v_12 = dollar)) & (v_11 = dot) & (next(turn) = l) : star;
+		(y = 0) & (x = 1) & ((v_11 = minus) | (v_11 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 0) & (x = 1) & ((v_11 = dot) | (v_11 = star)) & (next(turn) = d) : plus;
+		(y = 2) & (x = 1) & ((v_11 = minus) | (v_11 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 2) & (x = 1) & ((v_11 = dot) | (v_11 = star)) & (next(turn) = u) : plus;
+		TRUE : v_11;
+	esac;
+
+	next(v_12) := case
+		(y = 1) & (x = 2) & (v_12 = shtrudel) & (next(turn) != none) : minus;
+		(y = 1) & (x = 2) & (v_12 = plus) & (next(turn) != none) : dot;
+		(y = 1) & (x = 1) & ((v_12 = minus) | (v_12 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 1) & (x = 1) & ((v_12 = dot) | (v_12 = star)) & (next(turn) = r) : plus;
+		(y = 1) & (x = 0) & ((v_11 = star) | (v_11 = dollar)) & (v_12 = minus) & (next(turn) = r) : dollar;
+		(y = 1) & (x = 0) & ((v_11 = star) | (v_11 = dollar)) & (v_12 = dot) & (next(turn) = r) : star;
+		(y = 1) & (x = 3) & ((v_12 = minus) | (v_12 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 1) & (x = 3) & ((v_12 = dot) | (v_12 = star)) & (next(turn) = l) : plus;
+		(y = 1) & (x = 4) & ((v_13 = star) | (v_13 = dollar)) & (v_12 = minus) & (next(turn) = l) : dollar;
+		(y = 1) & (x = 4) & ((v_13 = star) | (v_13 = dollar)) & (v_12 = dot) & (next(turn) = l) : star;
+		(y = 0) & (x = 2) & ((v_12 = minus) | (v_12 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 0) & (x = 2) & ((v_12 = dot) | (v_12 = star)) & (next(turn) = d) : plus;
+		(y = 2) & (x = 2) & ((v_12 = minus) | (v_12 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 2) & (x = 2) & ((v_12 = dot) | (v_12 = star)) & (next(turn) = u) : plus;
+		TRUE : v_12;
+	esac;
+
+	next(v_13) := case
+		(y = 1) & (x = 3) & (v_13 = shtrudel) & (next(turn) != none) : minus;
+		(y = 1) & (x = 3) & (v_13 = plus) & (next(turn) != none) : dot;
+		(y = 1) & (x = 2) & ((v_13 = minus) | (v_13 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 1) & (x = 2) & ((v_13 = dot) | (v_13 = star)) & (next(turn) = r) : plus;
+		(y = 1) & (x = 1) & ((v_12 = star) | (v_12 = dollar)) & (v_13 = minus) & (next(turn) = r) : dollar;
+		(y = 1) & (x = 1) & ((v_12 = star) | (v_12 = dollar)) & (v_13 = dot) & (next(turn) = r) : star;
+		(y = 1) & (x = 4) & ((v_13 = minus) | (v_13 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 1) & (x = 4) & ((v_13 = dot) | (v_13 = star)) & (next(turn) = l) : plus;
+		(y = 0) & (x = 3) & ((v_13 = minus) | (v_13 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 0) & (x = 3) & ((v_13 = dot) | (v_13 = star)) & (next(turn) = d) : plus;
+		(y = 2) & (x = 3) & ((v_13 = minus) | (v_13 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 2) & (x = 3) & ((v_13 = dot) | (v_13 = star)) & (next(turn) = u) : plus;
+		TRUE : v_13;
+	esac;
+
+	next(v_14) := case
+		(y = 1) & (x = 4) & (v_14 = shtrudel) & (next(turn) != none) : minus;
+		(y = 1) & (x = 4) & (v_14 = plus) & (next(turn) != none) : dot;
+		(y = 1) & (x = 3) & ((v_14 = minus) | (v_14 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 1) & (x = 3) & ((v_14 = dot) | (v_14 = star)) & (next(turn) = r) : plus;
+		(y = 1) & (x = 2) & ((v_13 = star) | (v_13 = dollar)) & (v_14 = minus) & (next(turn) = r) : dollar;
+		(y = 1) & (x = 2) & ((v_13 = star) | (v_13 = dollar)) & (v_14 = dot) & (next(turn) = r) : star;
+		(y = 0) & (x = 4) & ((v_14 = minus) | (v_14 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 0) & (x = 4) & ((v_14 = dot) | (v_14 = star)) & (next(turn) = d) : plus;
+		(y = 2) & (x = 4) & ((v_14 = minus) | (v_14 = dollar)) & (next(turn) = u) : shtrudel;
+		(y = 2) & (x = 4) & ((v_14 = dot) | (v_14 = star)) & (next(turn) = u) : plus;
+		TRUE : v_14;
+	esac;
+
+	next(v_20) := case
+		(y = 2) & (x = 0) & (v_20 = shtrudel) & (next(turn) != none) : minus;
+		(y = 2) & (x = 0) & (v_20 = plus) & (next(turn) != none) : dot;
+		(y = 2) & (x = 1) & ((v_20 = minus) | (v_20 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 2) & (x = 1) & ((v_20 = dot) | (v_20 = star)) & (next(turn) = l) : plus;
+		(y = 2) & (x = 2) & ((v_21 = star) | (v_21 = dollar)) & (v_20 = minus) & (next(turn) = l) : dollar;
+		(y = 2) & (x = 2) & ((v_21 = star) | (v_21 = dollar)) & (v_20 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 0) & ((v_20 = minus) | (v_20 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 1) & (x = 0) & ((v_20 = dot) | (v_20 = star)) & (next(turn) = d) : plus;
+		(y = 0) & (x = 0) & ((v_10 = star) | (v_10 = dollar)) & (v_20 = minus) & (next(turn) = d) : dollar;
+		(y = 0) & (x = 0) & ((v_10 = star) | (v_10 = dollar)) & (v_20 = dot) & (next(turn) = d) : star;
+		TRUE : v_20;
+	esac;
+
+	next(v_21) := case
+		(y = 2) & (x = 1) & (v_21 = shtrudel) & (next(turn) != none) : minus;
+		(y = 2) & (x = 1) & (v_21 = plus) & (next(turn) != none) : dot;
+		(y = 2) & (x = 0) & ((v_21 = minus) | (v_21 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 2) & (x = 0) & ((v_21 = dot) | (v_21 = star)) & (next(turn) = r) : plus;
+		(y = 2) & (x = 2) & ((v_21 = minus) | (v_21 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 2) & (x = 2) & ((v_21 = dot) | (v_21 = star)) & (next(turn) = l) : plus;
+		(y = 2) & (x = 3) & ((v_22 = star) | (v_22 = dollar)) & (v_21 = minus) & (next(turn) = l) : dollar;
+		(y = 2) & (x = 3) & ((v_22 = star) | (v_22 = dollar)) & (v_21 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 1) & ((v_21 = minus) | (v_21 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 1) & (x = 1) & ((v_21 = dot) | (v_21 = star)) & (next(turn) = d) : plus;
+		(y = 0) & (x = 1) & ((v_11 = star) | (v_11 = dollar)) & (v_21 = minus) & (next(turn) = d) : dollar;
+		(y = 0) & (x = 1) & ((v_11 = star) | (v_11 = dollar)) & (v_21 = dot) & (next(turn) = d) : star;
+		TRUE : v_21;
+	esac;
+
+	next(v_22) := case
+		(y = 2) & (x = 2) & (v_22 = shtrudel) & (next(turn) != none) : minus;
+		(y = 2) & (x = 2) & (v_22 = plus) & (next(turn) != none) : dot;
+		(y = 2) & (x = 1) & ((v_22 = minus) | (v_22 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 2) & (x = 1) & ((v_22 = dot) | (v_22 = star)) & (next(turn) = r) : plus;
+		(y = 2) & (x = 0) & ((v_21 = star) | (v_21 = dollar)) & (v_22 = minus) & (next(turn) = r) : dollar;
+		(y = 2) & (x = 0) & ((v_21 = star) | (v_21 = dollar)) & (v_22 = dot) & (next(turn) = r) : star;
+		(y = 2) & (x = 3) & ((v_22 = minus) | (v_22 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 2) & (x = 3) & ((v_22 = dot) | (v_22 = star)) & (next(turn) = l) : plus;
+		(y = 2) & (x = 4) & ((v_23 = star) | (v_23 = dollar)) & (v_22 = minus) & (next(turn) = l) : dollar;
+		(y = 2) & (x = 4) & ((v_23 = star) | (v_23 = dollar)) & (v_22 = dot) & (next(turn) = l) : star;
+		(y = 1) & (x = 2) & ((v_22 = minus) | (v_22 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 1) & (x = 2) & ((v_22 = dot) | (v_22 = star)) & (next(turn) = d) : plus;
+		(y = 0) & (x = 2) & ((v_12 = star) | (v_12 = dollar)) & (v_22 = minus) & (next(turn) = d) : dollar;
+		(y = 0) & (x = 2) & ((v_12 = star) | (v_12 = dollar)) & (v_22 = dot) & (next(turn) = d) : star;
+		TRUE : v_22;
+	esac;
+
+	next(v_23) := case
+		(y = 2) & (x = 3) & (v_23 = shtrudel) & (next(turn) != none) : minus;
+		(y = 2) & (x = 3) & (v_23 = plus) & (next(turn) != none) : dot;
+		(y = 2) & (x = 2) & ((v_23 = minus) | (v_23 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 2) & (x = 2) & ((v_23 = dot) | (v_23 = star)) & (next(turn) = r) : plus;
+		(y = 2) & (x = 1) & ((v_22 = star) | (v_22 = dollar)) & (v_23 = minus) & (next(turn) = r) : dollar;
+		(y = 2) & (x = 1) & ((v_22 = star) | (v_22 = dollar)) & (v_23 = dot) & (next(turn) = r) : star;
+		(y = 2) & (x = 4) & ((v_23 = minus) | (v_23 = dollar)) & (next(turn) = l) : shtrudel;
+		(y = 2) & (x = 4) & ((v_23 = dot) | (v_23 = star)) & (next(turn) = l) : plus;
+		(y = 1) & (x = 3) & ((v_23 = minus) | (v_23 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 1) & (x = 3) & ((v_23 = dot) | (v_23 = star)) & (next(turn) = d) : plus;
+		(y = 0) & (x = 3) & ((v_13 = star) | (v_13 = dollar)) & (v_23 = minus) & (next(turn) = d) : dollar;
+		(y = 0) & (x = 3) & ((v_13 = star) | (v_13 = dollar)) & (v_23 = dot) & (next(turn) = d) : star;
+		TRUE : v_23;
+	esac;
+
+	next(v_24) := case
+		(y = 2) & (x = 4) & (v_24 = shtrudel) & (next(turn) != none) : minus;
+		(y = 2) & (x = 4) & (v_24 = plus) & (next(turn) != none) : dot;
+		(y = 2) & (x = 3) & ((v_24 = minus) | (v_24 = dollar)) & (next(turn) = r) : shtrudel;
+		(y = 2) & (x = 3) & ((v_24 = dot) | (v_24 = star)) & (next(turn) = r) : plus;
+		(y = 2) & (x = 2) & ((v_23 = star) | (v_23 = dollar)) & (v_24 = minus) & (next(turn) = r) : dollar;
+		(y = 2) & (x = 2) & ((v_23 = star) | (v_23 = dollar)) & (v_24 = dot) & (next(turn) = r) : star;
+		(y = 1) & (x = 4) & ((v_24 = minus) | (v_24 = dollar)) & (next(turn) = d) : shtrudel;
+		(y = 1) & (x = 4) & ((v_24 = dot) | (v_24 = star)) & (next(turn) = d) : plus;
+		(y = 0) & (x = 4) & ((v_14 = star) | (v_14 = dollar)) & (v_24 = minus) & (next(turn) = d) : dollar;
+		(y = 0) & (x = 4) & ((v_14 = star) | (v_14 = dollar)) & (v_24 = dot) & (next(turn) = d) : star;
+		TRUE : v_24;
+	esac;
+
+	next(box_x) := case
+		(next(turn) = r) & (x = box_x - 1) & (y = box_y) & (box_x < m - 1) : box_x + 1;
+		(next(turn) = l) & (x = box_x + 1) & (y = box_y) & (box_x > 0) : box_x - 1;
+		TRUE : box_x;
+	esac;
+
+	next(box_y) := case
+		(next(turn) = u) & (y = box_y + 1) & (x = box_x) & (box_y > 0) : box_y - 1;
+		(next(turn) = d) & (y = box_y - 1) & (x = box_x) & (box_y < n - 1) : box_y + 1;
+		TRUE : box_y;
+	esac;
+
+LTLSPEC !F(done)
